@@ -4,6 +4,7 @@
 Created on Mon Jan 18 11:47:19 2021
 
 @author: arndt
+trains the random forest and applies it to a test split of the data
 """
 
 import torch
@@ -114,7 +115,7 @@ if __name__=="__main__":
               'features' :"sqrt", #how many features to use per tree
               'samples' :0.7, # bagging fraction
               'alpha': 0, #pruning alpha
-              "weights": "qtdev" if sys.argv[2][-1]=="2" else "dev",
+              "weights":  "dev", # key for a weighting function defined below
               "min" : 2 # min leaf size
               }
     

@@ -4,7 +4,7 @@
 Created on Fri Jan 21 09:08:10 2022
 
 @author: arndt
-Plots difference between different coarse graining resolution
+Plots difference between different coarse graining resolutions
 """
 
 import time
@@ -31,6 +31,14 @@ from scipy.stats import spearmanr,pearsonr
 
 
 def get_max_fraction_simple(df):
+    """Gets the index of the cloud type with the largest accurence by grid cell
+
+    Args:
+        df dask/pandas DataFrame: 
+
+    Returns:
+        same type DataFrame: only one axis left,containing index of most common cloud type
+    """
     Sum = df.groupby(["lat", "lon"]).sum()
     Sum=Sum.loc[:,ctnames]
     Sum.columns=range(len(Sum.columns))
@@ -57,8 +65,7 @@ if __name__=="__main__":
             
     print(client.dashboard_link)
     plt.close("all")
-    #dss = "/dss/dssfs02/pn56su/pn56su-dss-0004/"
-    #work = dss+"work/"
+    
     work = "/work/bd1179/b309177/"
     ctnames = [ "Ci", "As", "Ac", "St", "Sc", "Cu", "Ns", "Dc"]
     axlabel_dict={"clear": "Clear sky fraction","Ci":"Cirrus/Cirrostratus fraction",
@@ -81,14 +88,14 @@ if __name__=="__main__":
                   "ceri": "ice particle radius","ctp":"cloud top pressure"}
     
     #client.wait_for_workers(1)
-    name=sys.argv[1] # this wants up to num files
+    name=sys.argv[1] #only the defining header of the file here, all files with different resolutions will be found using that
     root=len(name)
     files = glob.glob(os.path.join(work,"frames/parquets",name+"*.parquet"))
     fig = plt.figure(figsize=(10,8))
     axindexes = {"10":0,"50":1,"100":2}
     print(files) 
     for num,file in enumerate(files):
-            
+        #process each resolution
         _,name = os.path.split(file)
         print(name)
         start=name[root:]
@@ -123,7 +130,8 @@ if __name__=="__main__":
         print("df loaded", df.npartitions)
         #samplefrac=1
         rounddict={key:{"lat": 0, "lon": 0,"time":0}[key] for key in sptemp}
-        if len(sys.argv)>3:
+        # potentially seperate by season
+        if len(sys.argv)>3: 
             seas = sys.argv[3]
             name=name.replace("ESACCI","ESACCI_{}".format(seas))
             #samplefrac*=2
@@ -137,8 +145,9 @@ if __name__=="__main__":
             df.time=df.time.astype(int)/1e9/3600
             print(df.time.mean().compute(),df.time.max().compute())
         
-       
+        
         twodegreegrid=0
+        #round the coordinates to the specified decimal
         if not twodegreegrid:
             df=df.round(rounddict)
         else:
@@ -153,30 +162,27 @@ if __name__=="__main__":
         df_label=client.persist(df)
         progress(df_label)
         del df
+        #compute the most common cloud type for each grid box on the dask cluster
         most_common=client.submit(get_max_fraction_simple,df_label).result()
         most_common=most_common.persist()
         progress(most_common)
+        #get the zonal distribution of each cloud type
         gpby_lat=df_label.groupby("lat")
         zonal=gpby_lat.agg(["mean", "std"]).iloc[:,-16:]
         
-        
         most_common.columns=["ctype"]
-        print("beforeindex") 
         index=client.compute(most_common.index,)
-        print("afterindex")
         #client.wait_for_workers(12)
         index=index.result()
         progress(index)
         
         coords=np.stack(list(index)).astype("float16")
         del index
-        print(coords.shape)
-        colors = client.compute(most_common.ctype.to_dask_array(),).result()
+        colors = client.compute(most_common.ctype.to_dask_array(),).result() #inefficient way of writing that...
             
-        
         ax=fig.add_subplot(3,2,(axindex*2+1),projection=ccrs.PlateCarree())
         ax.coastlines()
-        print(resolu)
+        #the number of pixels per box to degrees
         resolu_indeg = int(resolu)*0.05
         
         ax.set_title("Predicted on cells of size: {}°".format(resolu_indeg))
@@ -185,14 +191,13 @@ if __name__=="__main__":
             ax.set_xticklabels([-160,-120,-80,-40,0,40,80,120,160], fontsize=13)
         ax.set_yticklabels([-80,-40,0,40,80], fontsize=13)
         ax.set_yticks([-80,-40,0,40,80])
+        #this transfers a series of data to the latlon grid
         lon = coords[:,1]
         lat = coords[:,0]
         un_lat = np.unique(lat)
         un_lon = np.unique(lon)
-        print(len(un_lat), len(un_lon))
         
-        print(coords.shape, np.max(lat), np.max(lon), np.min(lat), np.min(lon))
-        #gg=np.empty((len(step_lat),len(step_lon)))*np.nan
+        
         gg=np.empty((len(un_lat),len(un_lon)))
         for x,y,z in zip(lat,lon,colors):
             i = np.argwhere(un_lat==x)
@@ -200,15 +205,11 @@ if __name__=="__main__":
             gg[i,j] = z
             
         lonlon,latlat = np.meshgrid(np.unique(lon),np.unique(lat))
-        print("colors:",np.unique(colors))
-        print(latlat.shape,lonlon.shape,gg.shape, np.max(latlat), np.max(lonlon), 
-              np.sum(np.isnan(gg)))
-        scatter=ax.pcolormesh(lonlon, latlat,gg,cmap=cMap,shading="nearest",
+        #plot of most common cloud type per location
+        meshplot=ax.pcolormesh(lonlon, latlat,gg,cmap=cMap,shading="nearest",
                            norm=Normalize(0,8), transform=ccrs.PlateCarree())
         
-        
-        
-        
+        #now zonal average with sigma shading
         ax=fig.add_subplot(3,2,axindex*2+2)
         zonal=zonal.compute()
         zonal.sort_index(inplace=True)
@@ -232,7 +233,7 @@ if __name__=="__main__":
         if num==len(files)-1:
             fig.tight_layout()
             cb_ax = fig.add_axes([0.04, 0.05, 0.01, .85])  
-            cbar = fig.colorbar(scatter, orientation ="vertical",cax=cb_ax)
+            cbar = fig.colorbar(meshplot, orientation ="vertical",cax=cb_ax)
             cbar.ax.tick_params(direction="in", labelleft=True, labelright=False)
             cbar.ax.get_yaxis().set_ticks(np.arange(8)*1.0+0.5)
             cbar.ax.get_yaxis().set_ticklabels( [ 'Ci', 'As', 'Ac', 'St', 'Sc', 'Cu', 'Ns', 'Dc'],

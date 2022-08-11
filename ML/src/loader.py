@@ -336,7 +336,28 @@ class CumuloDataset(Dataset):
                  num_chunks = 20, chunksize_x = 100, chunksize_y =100,
                  plotting = False, label_fct="rel", filt = None,
                  transform = None):
-        
+        """Dataset creator
+
+        Args:
+            root_dir (string): where the files with the features are stored
+            label_dir (String): where the files with the labels are stored
+            ext (str, optional): datatype of input files. Defaults to "npz".
+            normalizer (function, optional): Function that normalizes the inputs. I never used this. Defaults to None.
+            indices (iterable, optional): will chose only specific files. Defaults to None.
+            check (bool, optional): If filepaths should be checked for consistency. avoids errors downstream. Defaults to False.
+            variables (iterable, optional): indices of variables to use. Defaults to None.
+            num_chunks (int, optional): how many grid cells should be extracted from each file. Low values to avoid memory overflow. Defaults to 20.
+            chunksize_x (int, optional): x dimension of grid cell. Defaults to 100.
+            chunksize_y (int, optional): y dimension of grid cell. Defaults to 100.
+            plotting (bool, optional): Probably bugged. Handles data a bit differently so the output can be plotted. Defaults to False.
+            label_fct (str, optional): key for label handling. "rel" is really the only thing that makes sense. Defaults to "rel".
+            filt (int, optional): gets only files froma specific month. Never used. Defaults to None.
+            transform (function, optional): could use this to for example log-transform the input. Defaults to None.
+
+        Raises:
+            NotImplementedError: _description_
+            FileNotFoundError: _description_
+        """
         self.transform = transform
         self.root_dir = root_dir
         self.ext = ext
@@ -348,8 +369,6 @@ class CumuloDataset(Dataset):
         elif label_fct == "abs":#absolute cloud type amount
             self.label_fct = label_abs_wc
             
-        if ext not in ["nc", "npz"]:
-            raise NotImplementedError("only .nc extensions are supported")
         
         self.label_paths = glob.glob(os.path.join(label_dir, "*.npy"))
         
@@ -371,7 +390,7 @@ class CumuloDataset(Dataset):
                         label_paths.append(p)
                 self.label_paths=label_paths
                 
-                
+        # in theory this can deal with nc files. would not bet on that being bug-free        
         if ext == "nc":
             self.file_paths = list(map(lambda x: os.path.join(root_dir, 
                                             os.path.basename(x).replace(".npy", 
@@ -407,6 +426,7 @@ class CumuloDataset(Dataset):
         self.chunksize_y = chunksize_y
         self.num_chunks = num_chunks
         self.variables = variables
+        # for some reason I established the convention that I only compute cwp if lwp and iwp are loaded
         if self.variables is not None:
             if (0 in self.variables) and (1 in self.variables):
                 self.channels = self.variables+1
@@ -438,7 +458,15 @@ class CumuloDataset(Dataset):
         return len(self.file_paths)
 
     def __getitem__(self, info):
+        """loads and processes a file
 
+        Args:
+            info (int): index of file to load. tuple handling no longer supported
+
+        Returns:
+            tuple: return filename, grid box averages of inputs, relative cloud amount per cell,
+                    locations in degrees(?) and cloud mask
+        """
         if isinstance(info, tuple):
             # load single tile
             idx, tile_idx = info

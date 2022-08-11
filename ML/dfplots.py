@@ -28,6 +28,18 @@ def hexbin(x, y,  **kwargs):
     
     
 def load_df(path):
+    """Applies the correct loading function depending on datatype
+       should really always be .pkl but sometimes its .parquet
+
+    Args:
+        path (string): file basename
+
+    Raises:
+        FileNotFoundError: wrong name or path
+
+    Returns:
+        pandas DataFrame: the data
+    """
     split = os.path.splitext(path)
     name=split[0]
     i=0
@@ -67,10 +79,7 @@ if __name__=="__main__":
             fancy =0
     except Exception:
         root = "/mnt/work/frames/"
-        #root="/home/arndt/Documents/dummy/frames/"
         name = "testframe100_3177_sep_0123459.pkl"
-        #root = "/mnt/mistral/ML-CMIP"
-        #name = "test_cnn_out.pkl"
     
     pd.set_option('display.max_rows', None)
     pd.set_option('display.max_columns', None)
@@ -134,12 +143,12 @@ if __name__=="__main__":
         dimx=4
         dimy=3
     else:
-        print("confused",l)
-    print(df.shape, df.columns, l)
+        raise ValueError("confused {}".format(l))
     
     #stats =df.describe()
     ins = df.iloc[:,:l]
     clouds_p =[]
+    #this makes sure that for old files real and predicted cloud types have different column names
     for c in copy(clouds):
         print(c,clouds)
         if c not in df.columns:
@@ -147,8 +156,7 @@ if __name__=="__main__":
         else:
             clouds_p.append(c+"_p")
     outs = df.loc[:,clouds]
-    print( outs.shape, clouds, clouds_p)
-    print(outs.describe())
+    
     bins = np.linspace(0,1,20)
     
     exponent=3
@@ -162,7 +170,7 @@ if __name__=="__main__":
     inhist = ins.hist(ax=iax, log = True, bins=20)
     for ix in iax.flatten():
         ix.set_yticks(yticks)
-    
+    #just plotting histograms for all values
     ifig.tight_layout()
     ifig.suptitle("inputs")
     ifig.savefig(os.path.join(root,"../stats","{}".format(
@@ -205,12 +213,10 @@ if __name__=="__main__":
             name.replace("pkl", "predictions.eps"))))
         
         
-    
         preds=preds.values[:,1:]
         outs=outs.values[:,1:]
-        print(outs.shape, preds.shape, df.shape)
         weights = np.sum(outs,0)/np.sum(outs)
-        
+        #this gives some scalar metrics for the predictions
         print("weights",weights)
         print("mean abs deviation",np.mean(np.abs(preds-outs),0), 
               "-->","weighted:",  np.average(np.mean(np.abs(preds-outs),0),weights=weights), 
@@ -236,7 +242,7 @@ if __name__=="__main__":
             print(df.iloc[:,-18+i].corr(df.iloc[:,-9+i]))
             print((np.sum(df.iloc[:,-18+i]>df.iloc[:,-9+i]+.1)
                   + np.sum(df.iloc[:,-18+i]<df.iloc[:,-9+i]-.1))/len(df))
-            
+        #compare to randomly sampled predictions from the real distributions
         samplemeans=[]
         for i in range(10):    
             stuff =  []
@@ -254,11 +260,11 @@ if __name__=="__main__":
      
     fancy=1
     
+    #for the test split joint density plots are created for real/predicted labels
     if fancy:
         print("fancy")
         name = name[name.find("frame"):]
         test = load_df(os.path.join(root,"test"+name))
-        
         train = load_df(os.path.join(root,"train"+name))
         
         train.pop("cm")  

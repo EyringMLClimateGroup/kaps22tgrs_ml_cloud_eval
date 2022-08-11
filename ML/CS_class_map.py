@@ -6,6 +6,7 @@ Created on Mon Nov 22 14:10:29 2021
 @author: arndt, partly from CUMULO
 plots the base CloudSat labels for one year. 
 Also saves normalized class distributions.
+reguires raw 2B-CLDCLASS-LIDAR data (not CUMULO)
 """
 import cartopy.crs as ccrs
 import glob
@@ -26,6 +27,9 @@ import warnings
 
 
 def random_argmax(occ,classes):
+    """
+    unnecessary complex function to get one of the argmaxes instead of always the first one
+    """
     i = int(np.random.randint(classes))
     if len(occ.shape)>1:
         return (np.argmax(np.roll(occ,i, 1),1)-i)%classes

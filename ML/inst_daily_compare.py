@@ -35,13 +35,10 @@ if __name__=="__main__":
         
             
     print(client.dashboard_link)
-    #dss = "/dss/dssfs02/pn56su/pn56su-dss-0004/"
-    #work = dss+"work/"
     d={0:"a",1:"b",2:"c",3:"d",4:"e",5:"f",6:"g",7:"h"}
     work = "/work/bd1179/b309177/"
     ctnames = [ "Ci", "As", "Ac", "St", "Sc", "Cu", "Ns", "Dc"]
     
-    #client.wait_for_workers(1)
     name=sys.argv[1]
     files = glob.glob(os.path.join(work,"frames/parquets",name))
     files += glob.glob(os.path.join(work,"frames/parquets",
