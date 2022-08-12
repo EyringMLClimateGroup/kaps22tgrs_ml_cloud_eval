@@ -4,6 +4,7 @@
 Created on Tue Aug 17 15:03:31 2021
 
 @author: arndt
+dumb program that does some plots
 """
 
 import numpy as np

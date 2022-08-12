@@ -158,7 +158,7 @@ def read_npz(npz_file, choice = None, liquid=False):
          6:ptop, 7:htop, 8:ttop, 9:emiss, 10:tsurf]
         The default is None.
     liquid : Bool, optional
-        If true, converts cwp to lwp and twp. The default is False.
+        If true, converts cwp to lwp and iwp. The default is False.
 
     Returns
     -------
@@ -336,7 +336,7 @@ class CumuloDataset(Dataset):
                  num_chunks = 20, chunksize_x = 100, chunksize_y =100,
                  plotting = False, label_fct="rel", filt = None,
                  transform = None):
-        """Dataset creator
+        """Dataset creator, i think this dataset is obsolete
 
         Args:
             root_dir (string): where the files with the features are stored
@@ -549,9 +549,6 @@ class CumuloDataset(Dataset):
     def __str__(self):
         return 'CUMULO'
     
-
-        
-        
     def generate_sample_locations_wc(self, labels):
         """ samples chunk centers that are reasonably far apart"""
 
@@ -671,6 +668,7 @@ class SummedDataset(Dataset):
         self.label_dir = label_dir
         lq=True
         if "nophase" in combine_strat:
+
             lq=False
         self.load = lambda x : load(x,choice=variables,liquid=lq)
         self.plotting = plotting

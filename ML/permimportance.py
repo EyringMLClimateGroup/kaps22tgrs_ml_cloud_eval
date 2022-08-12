@@ -1,3 +1,6 @@
+"""
+computes permutation importance and RF feature importance for train and test data
+"""
 import pandas as pd
 import joblib
 import os
@@ -9,14 +12,9 @@ plt.rcParams['figure.dpi'] = 400
 
 import traceback
 import warnings
-#from shap import TreeExplainer as te
-
-#work="/dss/dssfs02/pn56su/pn56su-dss-0004/work"
 
 if __name__=="__main__":
     with warnings.catch_warnings():
-        
-        
         
         pd.set_option('display.max_rows', None)
         pd.set_option('display.max_columns', None)
@@ -27,7 +25,7 @@ if __name__=="__main__":
         work = "/work/bd1179/b309177/"
         models=os.path.join(work,"models")
         frames=os.path.join(work, "frames")
-        name=sys.argv[1]
+        name=sys.argv[1]  # this is the model name. the data files are inferred from this
         scoring = ['r2', 'neg_mean_squared_error']
         samplesize=int(2e6)
 
@@ -47,15 +45,6 @@ if __name__=="__main__":
         
         del df
         print("test",columns)
-        """
-        expl = te(model,data=sample)
-        print("explainer")
-        s_vals = expl.shap_values(X=x,y=y)
-        print("s_vals")
-        pred=model.predict(x)
-        print(np.abs(s_vals.sum(1) + expl.expected_value - pred).max())
-        sys.exit()
-        """
         
         
         fig, ax = plt.subplots(figsize=(12,12))

@@ -5,6 +5,8 @@ Created on Fri May 21 14:49:20 2021
 
 @author: arndt
 uses trained RF to predict on ESACCI
+handles files sequentially, saves filenames of previously handled files
+therefore for one experiment the same batchsize should always be used because it is checked if the BATCHES of files already have been handled
 """
 
 import numpy as np

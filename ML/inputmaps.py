@@ -53,8 +53,6 @@ if __name__ == "__main__":
                     time.sleep(10)
     print(client.dashboard_link)
     plt.close("all")
-    #dss = "/dss/dssfs02/pn56su/pn56su-dss-0004/"
-    #work = dss+"work/"
     work = "/work/bd1179/b309177/"
     ctnames = [ "Ci", "As", "Ac", "St", "Sc", "Cu", "Ns", "Dc"]
     propnames = ['twp', 'lwp', 'iwp', 'cer_liq', 'cer_ice', 'cot', 'ctp', 'stemp_cloudy']
@@ -120,11 +118,9 @@ if __name__ == "__main__":
     start_july = datetime.fromisoformat("2010-07-01")
     end_july = datetime.fromisoformat("2010-07-31")
     ex_july = (df.time>(end_july-start).days)|( df.time<(start_july-start).days)
-    print(ex_july)
     df=df[ex_july]
     
     
-    print(df.time.head())
     df_label=df.round(rounddict)
     df_label=client.persist(df_label)
     progress(df_label)

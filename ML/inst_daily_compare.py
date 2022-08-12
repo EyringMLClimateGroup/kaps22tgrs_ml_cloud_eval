@@ -56,8 +56,8 @@ if __name__=="__main__":
             )
         
      
-    deframe=res[0]
-    dnframe=res[1]
+    deframe=res[0] # instantaneous values from ESACCI
+    dnframe=res[1] # 2-point daily means
     dboth = client.persist(dd.merge(deframe,dnframe, how="inner",
                                     suffixes=("e","n"),
                                     on=["lat","lon","time"]))
@@ -65,7 +65,9 @@ if __name__=="__main__":
     corr=dboth.corr().compute()
     print(corr.loc[[x+"e" for x in ctnames],[x+"n" for x in ctnames]])
     np.save(os.path.join(work,"stats/corr_inst_daily.npy"),corr)
-    sys.exit()
+
+
+    # individual correlations by cloud type (?)
     for cname in ctnames:
         
         deframe=res[0]
@@ -83,7 +85,7 @@ if __name__=="__main__":
         
         deframe = deframe.loc[:,["lat","lon","time"]+[cname]]
         dnframe = dnframe.loc[:,["lat","lon","time"]+[cname]]
-        print(deframe.head(),dnframe.head())
+    
         dboth = client.persist(dd.merge(deframe,dnframe, how="outer",
                                         suffixes=("e","n"),
                                         on=["lat","lon","time"]))
