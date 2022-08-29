@@ -1,5 +1,5 @@
 # Machine-learned cloud classes from satellite data for process-oriented climate model evaluation  
-This project allows the assignment of cloud type distribution to coarse-resoltion climate data as explained in the paper "Machine-learned cloud classes from satellite data for process-oriented climate model evaluation" (http://arxiv.org/abs/2205.00743).  
+This project allows the assignment of cloud type distribution to coarse-resolution climate data as explained in the paper "Machine-learned cloud classes from satellite data for process-oriented climate model evaluation" (http://arxiv.org/abs/2205.00743).  
 Author: Arndt Kaps, arndt.kaps@dlr.de  
 
 This work requires pixel wise labelled cloud data which was obtained using the CUMULO framework from Zantedeschi et al: https://github.com/FrontierDevelopmentLab/CUMULO . Given input data from MODIS as well as the corresponding label files from CUMULO a random forest (RF) is trained to predict relative cloud type amount for large grid cells. The grid cell size as well a training features can be chosen by the user. The MODIS data as well as the labels are then averaged to coarse grid cells during the training process.  
