@@ -28,7 +28,7 @@ if __name__=="__main__":
     if len(sys.argv)>=3:
         client = Client(sys.argv[2])
     else:
-        SCHEDULER_FILE = glob.glob("/scratch/b/b309177/scheduler*.json")[0]
+        SCHEDULER_FILE = glob.glob(os.path.join(os.environ["SCR"],"scheduler*.json"))[0]
         
         if SCHEDULER_FILE and os.path.isfile(SCHEDULER_FILE):
             client = Client(scheduler_file=SCHEDULER_FILE)
@@ -36,7 +36,7 @@ if __name__=="__main__":
             
     print(client.dashboard_link)
     d={0:"a",1:"b",2:"c",3:"d",4:"e",5:"f",6:"g",7:"h"}
-    work = "/work/bd1179/b309177/"
+    work = os.environ["WORK"]
     ctnames = [ "Ci", "As", "Ac", "St", "Sc", "Cu", "Ns", "Dc"]
     
     name=sys.argv[1]

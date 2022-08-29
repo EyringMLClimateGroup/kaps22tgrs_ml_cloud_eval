@@ -83,8 +83,7 @@ if __name__=="__main__":
     create_new=0
     
     
-    work= "/work/bd1179/b309177/"
-    #work = "/mnt/work/"
+    work= os.environ["WORK"]  
     model_dir = os.path.join(work, "models")
     variables = np.array([9])
     variables_ds = np.array([0,10])
@@ -95,7 +94,7 @@ if __name__=="__main__":
     with open("experiment_log.txt", "a") as of:
         print("predict_ESACCI.py("+str(datetime.today())+") : "+sys.argv[1], file=of)
         
-    folder ="/work/bd1179/b309177/ESACCI/daily/chunkable"
+    folder =os.path.join(os.environ["WORK"],"ESACCI/daily/chunkable")
     if "d" in time:
         assert "daily" in folder
     elif "m" in time:

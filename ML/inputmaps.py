@@ -44,7 +44,7 @@ if __name__ == "__main__":
     else:
             while True:
                 try:
-                    SCHEDULER_FILE = glob.glob("/scratch/b/b309177/scheduler*.json")[0]
+                    SCHEDULER_FILE = glob.glob(os.path.join(os.environ["SCR"],"/scheduler*.json"))[0]
                     
                     if SCHEDULER_FILE and os.path.isfile(SCHEDULER_FILE):
                         client = Client(scheduler_file=SCHEDULER_FILE)
@@ -53,7 +53,7 @@ if __name__ == "__main__":
                     time.sleep(10)
     print(client.dashboard_link)
     plt.close("all")
-    work = "/work/bd1179/b309177/"
+    work = os.environ["WORK"]
     ctnames = [ "Ci", "As", "Ac", "St", "Sc", "Cu", "Ns", "Dc"]
     propnames = ['twp', 'lwp', 'iwp', 'cer_liq', 'cer_ice', 'cot', 'ctp', 'stemp_cloudy']
     

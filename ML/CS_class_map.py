@@ -148,9 +148,10 @@ if __name__=="__main__":
     warnings.filterwarnings("ignore",category=DeprecationWarning)
     cMap= ListedColormap(['gold', 'green', 'blue','red', "cyan",
                           "lime", "black", "magenta"])#aquamarine
+    work=os.environ["WORK"]
+
+    lidar = os.path.join(work,"CloudSat/lidar")
     
-    lidar = "/mnt/lustre02/work/bd1083/b309177/CloudSat/lidar"
-    #lidar = "/mnt/work/CloudSat/lidar"
     files = glob.glob(os.path.join(lidar,"*hdf"))[:]
     pool=mlp.Pool(min(40,len(files)))
     try:

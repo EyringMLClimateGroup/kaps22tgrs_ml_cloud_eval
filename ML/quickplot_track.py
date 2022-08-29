@@ -31,12 +31,8 @@ if __name__=="__main__":
     cMap= ListedColormap(['gold', 'green', 'blue','red', "cyan",
                           "lime", "black", "magenta"])#aquamarine
     conf = np.zeros(2)
-    #work =os.path.join("/mnt/lustre02/work/bd1083/b309177")
-    #work = os.path.join("/mnt/work/")
-    work = os.path.join("/work/bd1179/b309177")
+    work=os.environ["WORK"]
     files =      glob.glob(os.path.join(work, "lrz_data/oob/npz/train/*.npz"))
-    #files.extend(glob.glob(os.path.join(work, "lrz_data/oob/npz/test/*.npz")))
-    #files.extend(glob.glob(os.path.join(work, "lrz_data/npz/*.npz")))
     np.random.shuffle(files)
     label_tiles = os.path.join(work,"lrz_data/oob/numpy/label/tiles")
     label_locs = os.path.join(work,"lrz_data/oob/numpy/label/metadata")

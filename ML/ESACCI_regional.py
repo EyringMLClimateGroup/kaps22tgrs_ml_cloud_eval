@@ -164,7 +164,7 @@ if __name__=="__main__":
     else:
         while True:
             try:
-                SCHEDULER_FILE = glob.glob("/scratch/b/b309177/scheduler*.json")[0]
+                SCHEDULER_FILE = glob.glob(os.path.join(os.environ["WORK"],"scheduler*.json"))[0]
                 
                 if SCHEDULER_FILE and os.path.isfile(SCHEDULER_FILE):
                     client = Client(scheduler_file=SCHEDULER_FILE)
@@ -175,9 +175,7 @@ if __name__=="__main__":
             
     print(client.dashboard_link)
     plt.close("all")
-    #dss = "/dss/dssfs02/pn56su/pn56su-dss-0004/"
-    #work = dss+"work/"
-    work = "/work/bd1179/b309177/"
+    work = os.environ["WORK"]
     ctnames = [ "Ci", "As", "Ac", "St", "Sc", "Cu", "Ns", "Dc"]
     axlabel_dict={"clear": "Clear sky fraction","Ci":"Cirrus/Cirrostratus fraction",
                   "As":"Altostratus fraction", "Ac":"Altocumulus fraction",

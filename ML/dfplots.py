@@ -68,9 +68,7 @@ def adj_r2(true,pred, trees=400):
 
 if __name__=="__main__":
     
-    dss = "/dss/dssfs02/pn56su/pn56su-dss-0004/"
-    #root=dss+"work/frames/"
-    root="/work/bd1179/b309177/frames"
+    root=os.environ["WORK"]+"/frames"
     try:
         name = sys.argv[1]
         if sys.argv[1]=="fancy":

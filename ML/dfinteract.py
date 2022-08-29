@@ -57,7 +57,7 @@ def read_df(path):
     
 if __name__=="__main__":
     norm = matplotlib.colors.Normalize(vmin=-1, vmax=1)
-    root = "/work/bd1179/b309177/frames/"
+    root = os.path.join(os.environ["WORK"],"frames")
     try:
         name = str(sys.argv[1])
     except Exception:

@@ -79,8 +79,8 @@ if __name__=="__main__":
     
     
     date = "2021-10-15phy"
-    work= "/work/bd1179/b309177/"
-    nc_dir = "/work/bd1179/b309177/lrz_data/"
+    work= os.environ["WORK"]
+    nc_dir = os.path.join(work,"lrz_data/")
     
     model_dir = os.path.join(nc_dir,"oob","results",date)
     npz_dir = os.path.join(nc_dir,"oob","npz" )

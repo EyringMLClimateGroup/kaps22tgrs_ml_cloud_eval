@@ -22,7 +22,7 @@ if __name__=="__main__":
         pd.set_option('display.max_colwidth', None)
         
         warnings.filterwarnings("ignore",category=UserWarning)
-        work = "/work/bd1179/b309177/"
+        work = os.environ["WORK"]
         models=os.path.join(work,"models")
         frames=os.path.join(work, "frames")
         name=sys.argv[1]  # this is the model name. the data files are inferred from this
