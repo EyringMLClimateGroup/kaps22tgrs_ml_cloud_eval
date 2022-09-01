@@ -1,3 +1,7 @@
+"""
+terrible code that creates gigantic parquet files
+these files can be used to crossreference properties and cloud types from IResNEt prediction
+"""
 import numpy as np
 import glob
 import os
