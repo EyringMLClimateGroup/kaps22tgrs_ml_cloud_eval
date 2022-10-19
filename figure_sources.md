@@ -1,4 +1,4 @@
-Figure 4 (Globes): `quickplot_track.py` saved as CUMULO.ps and pred.ps and one of the .eps files  
+Globes in Figure 3: `quickplot_track.py` saved as CUMULO.ps and pred.ps and one of the .eps files  
 Figure 7/8 (Joint densities): `dfplots.py` saved as joint*.eps in the "fancy" section  
 Figure 9 (CloudSat map): `CS_class_map.py` saved as CS_allctypes.png  
 Figure 10 (prediction maps): `ESACCI_regional.py` saved as *_allctypes.svg  
