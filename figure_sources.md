@@ -10,7 +10,7 @@ Fig. S2 (RF boxplots): `dfinteract.py`saved as stats.eps
 Fig. S3a/S3b (prediction maps): `ESACCI_regional.py` saved as *_Ci.eps/*_Cu.eps    
 Fig. S3c/S3c (variable maps): `inputmaps.py` saved as *_relice.eps/*_ptop.eps  
 Fig. S4a/b/c (feature importances): `permimportance.py` testpm.eps/trainpm.eps/fimp.eps  
-Fig. S4d (correlation): `dfinteract-py`saved as ctcorr_*inputset.eps  
+Fig. S4d (correlation): `dfinteract.py`saved as ctcorr_*inputset.eps  
 Fig. S5 (cell resolutions): `coarsecompare.py` saved as *coarsecomp.svg  
 Fig. S6/S7 (map temporal): `ESACCI_regional.py` *_CLOUDTYPE.eps for instantaneous and daily mean data  
 Fig. S8 (monthly mean): `ESACCI_regional.py` *allctypes.svg for monthly mean data  
