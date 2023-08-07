@@ -1,5 +1,5 @@
 # Machine-learned cloud classes from satellite data for process-oriented climate model evaluation  
-This project allows the assignment of cloud type distribution to coarse-resolution climate data as explained in the paper "Machine-learned cloud classes from satellite data for process-oriented climate model evaluation" (http://arxiv.org/abs/2205.00743).  
+This project allows the assignment of cloud type distribution to coarse-resolution climate data as explained in the paper "Machine-learned cloud classes from satellite data for process-oriented climate model evaluation" (http://doi.org/10.1109/TGRS.2023.3237008).  
 Author: Arndt Kaps, arndt.kaps@dlr.de  
 [![DOI](https://zenodo.org/badge/530182569.svg)](https://zenodo.org/badge/latestdoi/530182569)
 
